@@ -18,13 +18,20 @@ LAY.run({
 		page: ""
 	},
   props: {
-		textFamily: "arial",
+		textFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
     textWeight:"300",
 		textLineHeight: 1.2,
 		textSize: 17,
-		cursor: "default",
-		overflowY: "hidden"
+		cursor: "default"
   },
+	states: {
+		"mobile": {
+			onlyif: LAY.take("/", "data.isMobile"),
+			props: {
+				textSize: 15
+			}
+		}
+	},
   "Header": {
   	props: {
 			height: LAY.take("/", "data.margin").multiply(2.4),
@@ -76,9 +83,9 @@ LAY.run({
 			"Nav": {
 				many: {
 					rows: [
-						{page: "GETTING STARTED", link: "/getting-started",
-							icon: "&#xf0e5;"},
 						{page: "API", link:"/api",
+							icon: "&#xf0e5;"},
+						{page: "EXAMPLES", link: "/examples",
 							icon: "&#xf0e5;"},
 						{page: "SOURCE", link: "https://github.com/LayJS/LayJS",
 							icon: "&#xf0e5;"},
@@ -151,7 +158,7 @@ LAY.run({
 			width: LAY.take("/", "width"),
   		top: LAY.take('../Header', 'bottom'),
   		height: LAY.take('/', 'height').minus(
-				LAY.take('../Header', 'height').plus(LAY.take('../Footer', 'height'))
+				LAY.take('../Header', 'bottom')
 			),
 			overflowY: "auto"
   	},
@@ -174,7 +181,12 @@ LAY.run({
 						bottom: LAY.take("/", "data.margin").divide(2),
 						left: LAY.take("/", "data.margin"),
 						right: LAY.take("/", "data.margin")
-					}
+					},
+					border: {style:"double",
+						//color:LAY.take("/", "data.orangeTheme"),
+						color:LAY.color("white").setAlpha(0.2),
+
+						 width:0}
 	  		},
 				states: {
 					"mobile": {
@@ -185,122 +197,160 @@ LAY.run({
 					}
 				}
 	  	},
-	  	"Hero": {
+	  	"Features": {
 	  		props:{
-	  			top: LAY.take("../Description", "bottom").plus(
-						LAY.take("/", "data.margin").divide(2)
+	  			top: LAY.take("../Description", "bottom"),
+					height: LAY.take("", "$naturalHeight").plus(
+						LAY.take("/", "data.margin")
 					),
-	  			width: LAY.take('/', 'width'),
-	  			centerX: 0
-	  		},
-	  		"Message": {
-	  			many: {
-	  				formation: LAY.take(function (isMobile) {
-							return isMobile ? "vertical": "horizontal";
-	  				}).fn(LAY.take("/", "data.isMobile")),
-						fargs: {
-							//horizontal: {gap: LAY.take("/", "data.margin")},
-							vertical: {gap: LAY.take("/", "data.margin").multiply(2)}
-						},
-	  				rows: [
-	  					{
-	  						title:'Hardware Accelerated',
-								icon: "1b3",
-	  						subtext: "LAY uses the CSS transform primitive to position each element. " +
-	  						"Furthermore, LAY offers non-hardware accelerated CSS 'left'/'top' as an alternative." +
-	  						"For legacy browsers without support for hardware acceleration, " +
-	  						"LAY will gracefully degrade to using 'left'/'top' positioning."
-	  					},
-	  					{
-	  						title:'Constraint Based',
-								icon: "247",
-	  						subtext: "LAY provides a system of creating constraints within elements " +
-								"of the application. This ensures a more maintainable and scalable interface " +
-								"as writing the application automatically follows a DRY (Do not Repeat Yourself) principle."
-	  					},
-							{
-								title: "Single Object Declaration",
-								icon: "0a6",
-								subtext: "LAY applications are specified by following a declarative paradigm " +
-								"as opposed to an imperative paradigm. Furthermore, the entire declaration of " +
-								"the application is specified within a single nested object."
-							}
-	  				]
-	  			},
-	  			props: {
-	  				width: LAY.take("../", "width").divide(3),
-	  				textAlign: "center",
-	  			},
-					states: {
-						"mobile": {
-							onlyif: LAY.take("/", "data.isMobile"),
-							props: {
-								width: LAY.take("../", "width")
-							}
-						}
-					},
-					"Icon": {
-						$type: "html",
+	  			width: LAY.take('/', 'width')
 
-						props: {
-							width: LAY.take("../", "width"),
-							textPadding: 10,
-							textFamily: "FontAwesome",
-							text: LAY.take("&#xf%s;").format(
-								LAY.take("~/", "row.icon")),
-							textAlign: "center",
-							textSize: LAY.take("/", "data.margin").multiply(2),
-							textLineHeight: 1
-						}
+	  		},
+				"FeaturesInner": {
+					props: {
+						centerY: 0,
+						width: LAY.take("../", "width"),
 					},
-	  			"Title": {
-	  				props: {
-	  					centerX: 0,
-							top: LAY.take("../Icon", "bottom").plus(
-								LAY.take("/", "data.margin").divide(4)
-							),
-	  					text: LAY.take("../", "row.title"),
-	  					textWeight: "bold",
-							textSize: LAY.take("/", "data.bigFontSize")
-	  				}
-	  			},
-	  			"Subtext": {
-	  				props: {
-	  					width: LAY.take("../", "width"),
-	  					top: LAY.take("../Title", "bottom" ).plus(
-								LAY.take("/", "data.margin").divide(4)
-							),
-	  					text: LAY.take("../", "row.subtext"),
-	  					textColor: LAY.take("/", "data.grayTheme"),
-	  					textWrap: "normal",
-							textPadding: {
-								left:LAY.take("/", "data.margin"),
-								right: LAY.take("/", "data.margin")
-							}
-	  				},
+		  		"Message": {
+		  			many: {
+		  				formation: LAY.take(function (isMobile) {
+								return isMobile ? "vertical": "horizontal";
+		  				}).fn(LAY.take("/", "data.isMobile")),
+							fargs: {
+								vertical: {gap: LAY.take("/", "data.margin").multiply(2)}
+							},
+		  				rows: [
+		  					{
+		  						title:'Hardware Accelerated',
+									icon: "1b3",
+		  						subtext: "LAY uses the CSS transform primitive to position each element. " +
+		  						"Furthermore, LAY offers non-hardware accelerated CSS 'left'/'top' as an alternative. " +
+		  						"For legacy browsers without support for hardware acceleration, " +
+		  						"LAY will gracefully degrade to using 'left'/'top' positioning."
+		  					},
+		  					{
+		  						title:'Constraint Based',
+									icon: "247",
+		  						subtext: "LAY provides a system of creating constraints within elements " +
+									"of the application. This ensures a more maintainable and scalable interface " +
+									"as writing the application automatically follows a DRY (Do not Repeat Yourself) principle."
+		  					},
+								{
+									title: "Single Object Declaration",
+									icon: "0a6",
+									subtext: "LAY applications are specified by following a declarative paradigm " +
+									"as opposed to an imperative paradigm. Furthermore, the entire declaration of " +
+									"the application is specified within a single nested object."
+								}
+		  				]
+		  			},
+		  			props: {
+		  				width: LAY.take("../", "width").divide(3),
+		  				textAlign: "center",
+		  			},
 						states: {
 							"mobile": {
 								onlyif: LAY.take("/", "data.isMobile"),
 								props: {
-									textAlign: "left",
+									width: LAY.take("../", "width")
 								}
 							}
-						}
-	  			},
-					"BorderBottom": {
-						props: {
-							top: LAY.take("../Subtext", "bottom").plus(
-								LAY.take("/", "data.margin").multiply(4)
-							),
-							visible: LAY.take("/", "data.isMobile"),
-							height: 1,
-							width: LAY.take("../", "width"),
-							backgroundColor: LAY.take("/", "data.grayTheme"),
+						},
+						"TitleAndIcon": {
+							props: {
+								centerX: 0
+							},
+							states: {
+								"mobile": {
+									onlyif: LAY.take("/", "data.isMobile"),
+									props: {
+										left: LAY.take("/", "data.margin")
+									}
+								}
+							},
+							"Icon": {
+								$type: "html",
+								props: {
+									width: LAY.take("../", "width"),
+									//textColor: LAY.take("/", "data.purpleTheme"),
+									//textColor: LAY.take("/", "data.grayTheme"),
+									textFamily: "FontAwesome",
+									textAlign: "center",
+									text: LAY.take("&#xf%s;").format(
+										LAY.take("~/", "row.icon")),
+									textSize: LAY.take("/", "data.margin").multiply(2),
+									textLineHeight: 1
+								},
+								states: {
+									"mobile": {
+										onlyif: LAY.take("/", "data.isMobile"),
+										props: {
+											width: LAY.take("", "$naturalWidth"),
+											left: 0
+										}
+									}
+								}
+							},
+			  			"Title": {
+			  				props: {
+									top: LAY.take("../Icon", "bottom").plus(
+										LAY.take("/", "data.margin").divide(2)
+									),
+									textColor: LAY.take("/", "data.orangeTheme"),
+			  					text: LAY.take("~/", "row.title"),
+									textAlign: "center",
+			  					textWeight: "bold",
+									textVariant: "small-caps"
+			  				},
+								states: {
+									"mobile": {
+										onlyif: LAY.take("/", "data.isMobile"),
+										props: {
+											top: 0,
+											centerY: 0,
+											left: LAY.take("../Icon", "right").plus(
+												LAY.take("/", "data.margin").multiply(1.8))
+										}
+									}
+								}
+			  			}
+						},
+		  			"Subtext": {
+		  				props: {
+								top: LAY.take("../TitleAndIcon", "bottom" ).plus(
+									LAY.take("/", "data.margin").divide(4)
+								),
+								width: LAY.take("../", "width"),
+		  					text: LAY.take("../", "row.subtext"),
+		  					//textColor: LAY.take("/", "data.grayTheme"),
+		  					textWrap: "normal",
+								textPadding: {
+									left:LAY.take("/", "data.margin"),
+									right: LAY.take("/", "data.margin")
+								}
+		  				},
+							states: {
+								"mobile": {
+									onlyif: LAY.take("/", "data.isMobile"),
+									props: {
+										textAlign: "left",
+									}
+								}
+							}
+		  			}
+		  		}
+				}
+			},
+			"GettingStarted": {
+				props: {
+					top: LAY.take("../Features", "bottom"),
+					width: LAY.take("/", "width"),
+					text: "GettingStarted",
+					backgroundColor: LAY.color("gainsboro")
+				},
 
-						}
-					}
-	  		}
 			}
+
   	},
 		"API": {
 			exist: LAY.take("/", "data.page").eq("API"),
@@ -428,18 +478,6 @@ LAY.run({
 				}
 			}
 		}
-	},
-  "Footer": {
-		$type: 'html',
-  	props: {
-  		top: LAY.take("../Content", "bottom"),
-  		width: LAY.take("/", "width"),
-  		height: 40,
-			text: "Copyright &copy; 2016 Raj Nathani",
-			textAlign: "center",
-			textColor: LAY.rgba(255,255,255,0.72),
-			textLineHeight: LAY.take("", 'height').divide(LAY.take('', 'textSize')),
-  		backgroundImage: LAY.take("/Header", "backgroundImage")
-  	}
-  }
+	}
+
 });

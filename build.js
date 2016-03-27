@@ -44,7 +44,15 @@ function recurse( path, l, relpath ) {
 
 recurse( execSync("pwd").toString().trim() + "/LayJS/api", l, "" );
 
-fs.writeFileSync("static/api.js",
+fs.writeFileSync("static/API.js",
   `var API = ${JSON.stringify(l)}`, "utf8");
 
-//execSync("rm -rf LayJS");
+  fs.writeFileSync("static/README.js",
+    `var README = ${JSON.stringify(
+      fs.readFileSync(execSync("pwd").toString().trim() +
+        "/LayJS/README.md").toString())}`,
+        "utf8");
+
+
+
+execSync("rm -rf LayJS");

@@ -24,6 +24,7 @@ LAY.run({
 		textSize: 17,
 		cursor: "default"
   },
+	css: "pre {box-sizing:border-box; white-space:pre-wrap;width: 100%; background:black;color:white;padding:10px}",
 	states: {
 		"mobile": {
 			onlyif: LAY.take("/", "data.isMobile"),
@@ -55,21 +56,12 @@ LAY.run({
 		},
 		"Logo": {
 			props: {
-				cursor: "pointer",
 				link: "/",
+				cursor: "pointer",
 				centerY: 0,
 				left: LAY.take("/", "data.margin").multiply(1),
-				filters: [
-					//{type: "dropShadow", x:1, y:1,
-					 	//blur: 20, color: LAY.rgba(0,0,0,0.5)}
-						//{type: "saturate", value:0.6}
-				]
-			},
-			"Image": {
-				props: {
-					image: "/static/logo6.png",
-					height: LAY.take("../../", "height").percent(72)
-				}
+				height: LAY.take("../", "height").percent(72),
+				image: "/static/logo.png"
 			}
 		},
 		"NavArea": {
@@ -171,22 +163,16 @@ LAY.run({
 	  		props: {
 	  			width: LAY.take("/", "width"),
 					backgroundColor: LAY.color('black'),
-					textColor: LAY.rgba(255,255,255,0.8),
+					textColor: LAY.take("/", "data.lightGrayTheme"),
 	  			textSize: LAY.take("/", "data.bigFontSize"),
 	  			textWrap: "normal",
-	  			text: "LAY.js is a constraint-based page layout engine written in Javascript, as a substitute to CSS positioning, " +
-	  				"and HTML markup. The central premise of which is to provide a system to declare an entire application using a single object.",
+	  			text: "LayJS is a UI framework which uses (GPU accelerated) CSS3 transforms to position elements on the page. The central premise of which is to provide declaration of a full application using a single object, done so by providing the ability to create layout and data constraints across the object.",
 	  			textPadding: {
 						top: LAY.take("/", "data.margin").divide(2),
 						bottom: LAY.take("/", "data.margin").divide(2),
 						left: LAY.take("/", "data.margin"),
 						right: LAY.take("/", "data.margin")
-					},
-					border: {style:"double",
-						//color:LAY.take("/", "data.orangeTheme"),
-						color:LAY.color("white").setAlpha(0.2),
-
-						 width:0}
+					}
 	  		},
 				states: {
 					"mobile": {
@@ -269,14 +255,13 @@ LAY.run({
 								}
 							},
 							"Icon": {
-								$type: "html",
 								props: {
 									width: LAY.take("../", "width"),
 									//textColor: LAY.take("/", "data.purpleTheme"),
 									//textColor: LAY.take("/", "data.grayTheme"),
 									textFamily: "FontAwesome",
 									textAlign: "center",
-									text: LAY.take("&#xf%s;").format(
+									html: LAY.take("&#xf%s;").format(
 										LAY.take("~/", "row.icon")),
 									textSize: LAY.take("/", "data.margin").multiply(2),
 									textLineHeight: 1
@@ -345,12 +330,13 @@ LAY.run({
 				props: {
 					top: LAY.take("../Features", "bottom"),
 					width: LAY.take("/", "width"),
-					text: "GettingStarted",
-					backgroundColor: LAY.color("gainsboro")
-				},
-
+					backgroundColor: LAY.take("/", "data.lightGrayTheme"),
+					html: LAY.markdown(README),
+					textPadding: LAY.take("/", "data.margin"),
+					textWrap: "normal",
+					overflow: "auto"
+				}
 			}
-
   	},
 		"API": {
 			exist: LAY.take("/", "data.page").eq("API"),
@@ -466,13 +452,12 @@ LAY.run({
 				}
 			},
 			"View": {
-				$type: "html",
 				props: {
 					width: LAY.take("../", "width").minus(LAY.take("../Side", "width")),
 					height: LAY.take("../", "height"),
 					left: LAY.take("../Side", "right"),
 					overflowY: "auto",
-					text: LAY.take("../", "data.content"),
+					html: LAY.take("../", "data.content"),
 					textPadding: 20,
 					textWrap: "normal"
 				}

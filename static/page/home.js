@@ -1,6 +1,16 @@
 var PAGE_HOME = {
+  $page: true,
   props: {
     width: LAY.take("../", "width")
+  },
+  $load: function () {
+    var self = this;
+    setTimeout(function () {
+      self.data("loaded", true);
+    }, 100);
+  },
+  data: {
+    loaded: false
   },
   "Description": {
     props: {
@@ -17,7 +27,14 @@ var PAGE_HOME = {
         right: LAY.take("/", "data.margin")
       }
     },
+    transition: {all:{type:"ease", duration:1000}},
     states: {
+      "unloaded": {
+        onlyif: LAY.take("@", "data.loaded").not(),
+        props: {
+          shiftY: -30
+        }
+      },
       "mobile": {
         onlyif: LAY.take("/", "data.isMobile"),
         props: {
@@ -100,8 +117,6 @@ var PAGE_HOME = {
           "Icon": {
             props: {
               width: LAY.take("../", "width"),
-              //textColor: LAY.take("/", "data.purpleTheme"),
-              //textColor: LAY.take("/", "data.grayTheme"),
               textFamily: "FontAwesome",
               textAlign: "center",
               html: LAY.take("&#xf%s;").format(
@@ -109,7 +124,21 @@ var PAGE_HOME = {
               textSize: LAY.take("/", "data.margin").multiply(2),
               textLineHeight: 1
             },
+            transition: {
+              "all": {
+                type: "ease",
+                duration: 700
+                //duration: LAY.take("~", "$i").multiply(400)
+              }
+            },
             states: {
+              "unloaded": {
+                onlyif: LAY.take("@", "data.loaded").not(),
+                props: {
+                  scaleX: 0.5,
+                  scaleY: 0.5
+                },
+              },
               "mobile": {
                 onlyif: LAY.take("/", "data.isMobile"),
                 props: {
@@ -157,7 +186,19 @@ var PAGE_HOME = {
               right: LAY.take("/", "data.margin")
             }
           },
+          transition: {
+            "all": {
+              type: "ease",
+              duration: LAY.take("~", "$i").multiply(360)
+            }
+          },
           states: {
+            "unloaded": {
+              onlyif: LAY.take("@", "data.loaded").not(),
+              props: {
+                shiftY: 20
+              },
+            },
             "mobile": {
               onlyif: LAY.take("/", "data.isMobile"),
               props: {
@@ -170,10 +211,16 @@ var PAGE_HOME = {
     }
   },
   "GettingStarted": {
+    data: {
+      loaded: false
+    },
     props: {
       top: LAY.take("../Features", "bottom"),
       width: LAY.take("/", "width"),
       backgroundColor: LAY.take("/", "data.lightGrayTheme"),
+      filters: [
+        {type:"blur", value:0}
+      ],
       html: LAY.markdown(README),
       textPadding:{
         top:LAY.take("/", "data.margin").half(),
@@ -183,6 +230,37 @@ var PAGE_HOME = {
       },
       textWrap: "normal",
       overflow: "auto"
+    },
+    transition: {
+      all: {
+        type: "ease",
+        duration: 600
+      }
+    },
+    states: {
+      "loaded": {
+        onlyif: LAY.take("", "data.loaded").or(
+          LAY.take("@/../", "$scrolledY").gte(1)),
+        install: function () {
+          this.data("loaded", true);
+        }
+      },
+      "unloaded": {
+        onlyif: LAY.take("", "data.loaded").not().and(
+          LAY.take("@/../", "$scrolledY").lt(1)),
+        props: {
+          filters: [
+            {type:"blur", value:6}
+          ]
+        },
+        // unblur if the page has been loaded for more than 800ms
+        install: function() {
+          var self = this;
+          setTimeout(function(){
+            self.data("loaded", true);
+          }, 800);
+        }
+      }
     }
   }
 };

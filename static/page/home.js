@@ -27,12 +27,12 @@ var PAGE_HOME = {
         right: LAY.take("/", "data.margin")
       }
     },
-    transition: {all:{type:"ease", duration:1000}},
+    transition: {all:{type:"ease", duration:1200}},
     states: {
       "unloaded": {
         onlyif: LAY.take("@", "data.loaded").not(),
         props: {
-          shiftY: -30
+          shiftY: LAY.take("", "height").negative()
         }
       },
       "mobile": {
@@ -116,9 +116,8 @@ var PAGE_HOME = {
           },
           "Icon": {
             props: {
-              width: LAY.take("../", "width"),
+              centerX: 0,
               textFamily: "FontAwesome",
-              textAlign: "center",
               html: LAY.take("&#xf%s;").format(
                 LAY.take("~/", "row.icon")),
               textSize: LAY.take("/", "data.margin").multiply(2),
@@ -126,8 +125,10 @@ var PAGE_HOME = {
             },
             transition: {
               "all": {
-                type: "ease",
-                duration: 700
+                type: "spring",
+                //tension: 10,
+                //friction: 10,
+                //duration: 700
                 //duration: LAY.take("~", "$i").multiply(400)
               }
             },
@@ -165,8 +166,7 @@ var PAGE_HOME = {
                 props: {
                   top: 0,
                   centerY: 0,
-                  left: LAY.take("../Icon", "right").plus(
-                    LAY.take("/", "data.margin").multiply(1.8))
+                  left: LAY.take("../Icon", "right").plus(10)
                 }
               }
             }
@@ -211,9 +211,6 @@ var PAGE_HOME = {
     }
   },
   "GettingStarted": {
-    data: {
-      loaded: false
-    },
     props: {
       top: LAY.take("../Features", "bottom"),
       width: LAY.take("/", "width"),
@@ -237,28 +234,22 @@ var PAGE_HOME = {
         duration: 600
       }
     },
+    data: {
+      loaded: false
+    },
     states: {
-      "loaded": {
-        onlyif: LAY.take("", "data.loaded").or(
-          LAY.take("@/../", "$scrolledY").gte(1)),
-        install: function () {
-          this.data("loaded", true);
-        }
-      },
       "unloaded": {
-        onlyif: LAY.take("", "data.loaded").not().and(
-          LAY.take("@/../", "$scrolledY").lt(1)),
+        onlyif: ((LAY.take("@../", "$scrolledY").plus(320)).lt(
+          LAY.take("", "top")).and(
+            LAY.take("", "data.loaded").not())
+        ),
         props: {
           filters: [
             {type:"blur", value:6}
           ]
         },
-        // unblur if the page has been loaded for more than 800ms
-        install: function() {
-          var self = this;
-          setTimeout(function(){
-            self.data("loaded", true);
-          }, 800);
+        uninstall: function () {
+          this.data("loaded", true);
         }
       }
     }

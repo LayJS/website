@@ -8,6 +8,7 @@ LAY.run({
 		grayTheme: LAY.rgb(120,120,120),
 		lightGrayTheme: LAY.rgb(238,238,238),
 		mobileWidth: 720,
+		isMobileMenuInvoked: false,
 		bigFontSize: LAY.take(function (isMobile) {
 				return isMobile ? 15 : 22;
 			}).fn(LAY.take("", "data.isMobile")),
@@ -24,6 +25,7 @@ LAY.run({
 		textSize: 17,
 		cursor: "default"
   },
+	$extfonts: ["FontAwesome"],
 	css:
 		LAY.take("pre {box-sizing:border-box; white-space:pre-wrap;width: 100%; background:black;color:white;padding:10px}" +
 		" a { color: #{purpleTheme}; } a:visited { color: #{darkenedPurpleTheme}; }" +
@@ -53,7 +55,8 @@ LAY.run({
 				LAY.take("/", "data.purpleTheme"),
 				LAY.take("/", "data.purpleTheme").colorDarken(0.04),
 				LAY.take("/", "data.purpleTheme").colorDarken(0.04)
-			)
+			),
+			zIndex: 3,
   	},
 		states: {
 			"mobile": {
@@ -78,8 +81,18 @@ LAY.run({
 				left: LAY.take("../Logo", "right").plus(
 					LAY.take("/","data.margin").multiply(1)),
 				centerY: 0,
-				width: LAY.take("../", "width").minus(LAY.take("", "left")),
-				display: LAY.take("/", "data.isMobile").not()
+				width: LAY.take("../", "width").minus(LAY.take("", "left"))
+			},
+			states: {
+				"mobile": {
+					onlyif: LAY.take("/","data.isMobile"),
+					props: {
+						display: LAY.take("/", "data.isMobileMenuInvoked"),
+						left: 0,
+						top: LAY.take("../", "height"),
+						backgroundColor: LAY.take("/", "data.purpleTheme")
+					}
+				}
 			},
 			"Nav": {
 				many: {
@@ -90,27 +103,16 @@ LAY.run({
 							icon: "&#xf108;"},
 						{page: "SOURCE", link: "https://github.com/LayJS/LayJS",
 							icon: "&#xf09b"},
-
 					],
 					formation: "horizontal",
 					fargs: {
 						horizontal: {gap:LAY.take("/", "data.margin")}
-					}
-				},
-				"Icon": {
-					props: {
-						left: LAY.take("/", "data.margin"),
-						centerY: 0,
-						textFamily: "FontAwesome",
-						html: LAY.take("~/", "row.icon")
-					}
-				},
-				"Text": {
-					props: {
-						left: LAY.take("../Icon","right").plus(
-							LAY.take("/", "data.margin")),
-						centerY: 0,
-						text: LAY.take("~/", "row.page")
+					},
+					states: {
+						"mobile": {
+							onlyif: LAY.take("/", "data.isMobile"),
+							formation: "vertical"
+						}
 					}
 				},
 				props: {
@@ -126,7 +128,6 @@ LAY.run({
 					textFamily: LAY.take("/", "data.headingFont"),
 					textWeight: "bold",
 					textSize: 24
-
 				},
 				transition: {
 					backgroundColor: {
@@ -135,6 +136,12 @@ LAY.run({
 					}
 				},
 				states: {
+					"mobile": {
+						onlyif: LAY.take("/","data.isMobile"),
+						props: {
+							width: LAY.take("../", "width")
+						}
+					},
 					"hover": {
 						onlyif: LAY.take("", "$hovering"),
 						props: {
@@ -154,10 +161,34 @@ LAY.run({
 							textColor: LAY.take("/", "data.purpleTheme")
 						}
 					}
+				},
+				"Icon": {
+					props: {
+						left: LAY.take("/", "data.margin"),
+						centerY: 0,
+						textFamily: "FontAwesome",
+						html: LAY.take("~/", "row.icon")
+					}
+				},
+				"Text": {
+					props: {
+						left: LAY.take("../Icon","right").plus(
+							LAY.take("/", "data.margin")),
+						centerY: 0,
+						text: LAY.take("~/", "row.page")
+					},
+					states: {
+						"mobile": {
+							onlyif: LAY.take("/","data.isMobile"),
+							props: {
+								right: LAY.take("/", "data.margin")
+							}
+						}
+					}
 				}
 			}
 		},
-		"MobileHeader": {
+		"MobileTitle": {
 			props: {
 				text: LAY.take("/", "data.page"),
 				textSize: LAY.take("/", "data.bigFontSize"),
@@ -166,6 +197,66 @@ LAY.run({
 				centerX: 0,
 				centerY: 0,
 				display: LAY.take("/", "data.isMobile")
+			}
+		},
+		"MobileMenuInvoke": {
+			props: {
+				display: LAY.take("/", "data.isMobile"),
+				cursor: "pointer",
+				right: LAY.take("/", "data.margin"),
+				centerY: 0,
+				width: 30
+			},
+			when: {
+				click: function () {
+					LAY.level("/").data("isMobileMenuInvoked",
+						!LAY.level("/").attr("data.isMobileMenuInvoked")
+					);
+				}
+			},
+			"Bar": {
+				many: {
+					rows: new Array(3),
+					fargs: {vertical:{gap:LAY.take("../", "width").divide(3)}}
+				},
+				props: {
+					height: 1,
+					width: LAY.take("../", "width"),
+					backgroundColor: LAY.take("/", "data.orangeTheme")
+				},
+				transition: {
+					all: {
+						type: "spring"
+					}
+				},
+				states: {
+					"first": {
+						onlyif: LAY.take("/", "data.isMobileMenuInvoked").and(
+							LAY.take("","$i").eq(1)
+						),
+						props: {
+							originX: 0,
+							rotateZ: 45,
+						}
+					},
+					"second": {
+						onlyif: LAY.take("/", "data.isMobileMenuInvoked").and(
+							LAY.take("","$i").eq(2)
+						),
+						props: {
+							opacity: 0
+						}
+					},
+					"third": {
+						onlyif: LAY.take("/", "data.isMobileMenuInvoked").and(
+							LAY.take("","$i").eq(3)
+						),
+						props: {
+							originX: 0,
+							rotateZ: -45,
+						}
+					}
+				}
 			}
 		}
   },

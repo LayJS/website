@@ -102,7 +102,7 @@ var PAGE_API = {
         },
         "SubTree": {
           exist: LAY.take("~/", "data.isLink").not(),
-          $inherit: "@/ApiTree/_Tree",
+          $inherit: "@ApiTree/_Tree",
           data: {
             rows: LAY.take("~/", "row.sub"),
             filePath: LAY.take("~/../", "data.filePath").concat("/").concat(

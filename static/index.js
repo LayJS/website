@@ -27,7 +27,7 @@ LAY.run({
   },
 	$extfonts: ["FontAwesome"],
 	css:
-		LAY.take("pre {box-sizing:border-box; white-space:pre-wrap;width: 100%; background:black;color:white;padding:10px}" +
+		LAY.take("pre {box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word;width:100%; background:black;color:white;padding:10px}" +
 		" a { color: #{purpleTheme}; } a:visited { color: #{darkenedPurpleTheme}; }" +
 		" h1,h2,h3,h4,h5,h6 { font-family: #{headingFont} }").format(
 			{

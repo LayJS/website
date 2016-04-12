@@ -162,7 +162,7 @@ var PAGE_API = {
         ),
         props: {
           textPaddingTop: LAY.take("/", "data.margin"),
-          html: "This documentation is in the process of being written."
+          html: "This documentation for this subsection is in the process of being written, other subsections would be available for viewing."
         }
       }
     }

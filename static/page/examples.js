@@ -2,7 +2,9 @@ var PAGE_EXAMPLES = {
   props: {
     width: LAY.take("../", "width"),
     textPadding: LAY.take("/", "data.margin"),
-    text: "Coming soon",
-    textSize: 20
+    textSize: 20,
+    html: LAY.markdown(
+      "Coming soon, for now visit: [http://codepen.io/collection/AEPxGb/](http://codepen.io/collection/AEPxGb/)")
+
   }
 };

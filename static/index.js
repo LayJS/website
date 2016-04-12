@@ -3,8 +3,8 @@
 
 LAY.run({
 	data: {
-		purpleTheme: LAY.rgb(108, 67, 188),
-		orangeTheme: LAY.rgb(248, 138, 124),
+		purpleTheme: LAY.rgb(81, 57, 188),
+		orangeTheme: LAY.rgb(231, 105, 124),
 		grayTheme: LAY.rgb(120,120,120),
 		lightGrayTheme: LAY.rgb(238,238,238),
 		mobileWidth: 720,

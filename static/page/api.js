@@ -145,7 +145,8 @@ var PAGE_API = {
         props: {
           top: LAY.take("../ApiTree", "bottom"),
           left: 0,
-          width: LAY.take("../", "width")
+          width: LAY.take("../", "width"),
+          height: LAY.take("", "$naturalHeight")
         }
       },
       "empty": {
@@ -153,6 +154,15 @@ var PAGE_API = {
         props: {
           textPaddingTop: LAY.take("/", "data.margin"),
           html: "Welcome to the API, use the navigation on the left to read the API."
+        }
+      },
+      "unfilled": {
+        onlyif: LAY.take("", "empty.onlyif").not().and(
+          LAY.take("@", "data.content").eq("")
+        ),
+        props: {
+          textPaddingTop: LAY.take("/", "data.margin"),
+          html: "This documentation is in the process of being written."
         }
       }
     }

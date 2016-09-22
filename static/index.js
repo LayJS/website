@@ -3,8 +3,8 @@
 
 LAY.run({
 	data: {
-		purpleTheme: LAY.rgb(81, 57, 188),
-		orangeTheme: LAY.rgb(231, 105, 124),
+		darkTheme: LAY.rgb(30,30,30),
+		lightTheme: LAY.rgb(175,205,180),
 		grayTheme: LAY.rgb(120,120,120),
 		lightGrayTheme: LAY.rgb(238,238,238),
 		mobileWidth: 720,
@@ -27,12 +27,13 @@ LAY.run({
   },
 	$extfonts: ["FontAwesome"],
 	css:
-		LAY.take("pre {box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word;width:100%; background:black;color:white;padding:10px}" +
-		" a { color: #{purpleTheme}; } a:visited { color: #{darkenedPurpleTheme}; }" +
+		LAY.take("pre {box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word;width:100%; background:#{darkTheme};color:white;padding:10px}" +
+		" a { color: #{lightTheme}; } a:visited { color: #{darkenedLightTheme}; }" +
 		" h1,h2,h3,h4,h5,h6 { font-family: #{headingFont} }").format(
 			{
-				orangeTheme: LAY.take("", "data.purpleTheme"),
-				darkenedOrangeTheme: LAY.take("", "data.purpleTheme").colorDarken(0.2),
+				lightTheme: LAY.take("", "data.lightTheme"),
+				darkTheme: LAY.take("", "data.darkTheme"),
+				darkenedLightTheme: LAY.take("", "data.lightTheme").colorDarken(0.2),
 				headingFont: LAY.take("", "data.headingFont")
 			}
 		),
@@ -48,14 +49,16 @@ LAY.run({
   	props: {
 			height: LAY.take("/", "data.margin").multiply(2.4),
   		width: LAY.take('/', 'width'),
-			//backgroundColor: LAY.take("/", "data.purpleTheme")
-			backgroundImage: LAY.take("repeating-linear-gradient(310deg, %s, %s 50px, \
-    		%s 50px, %s 100px)").format(
-				LAY.take("/", "data.purpleTheme"),
-				LAY.take("/", "data.purpleTheme"),
-				LAY.take("/", "data.purpleTheme").colorDarken(0.04),
-				LAY.take("/", "data.purpleTheme").colorDarken(0.04)
-			),
+			//backgroundColor: LAY.take("/", "data.darkTheme"),
+			backgroundImage: LAY.take("repeating-linear-gradient(310deg, %s, %s 64px, \
+		    		%s 64px, %s 128px)").format(
+						LAY.take("/", "data.darkTheme"),
+						LAY.take("/", "data.darkTheme"),
+						LAY.take("/", "data.darkTheme").colorDarken(0.04),
+						LAY.take("/", "data.darkTheme").colorDarken(0.04)
+					),
+		borderBottom: {style: "solid", width:1, color: LAY.take("/", "data.lightTheme")},
+
 			zIndex: 3,
   	},
 		states: {
@@ -90,7 +93,7 @@ LAY.run({
 						display: LAY.take("/", "data.isMobileMenuInvoked"),
 						left: 0,
 						top: LAY.take("../", "height"),
-						backgroundColor: LAY.take("/", "data.purpleTheme")
+						backgroundColor: LAY.take("/", "data.darkTheme")
 					}
 				}
 			},
@@ -124,7 +127,7 @@ LAY.run({
 					height: LAY.take("", "$naturalHeight").plus(
 						LAY.take("/", "data.margin").half().half()),
 					link: LAY.take("", "row.link"),
-					textColor: LAY.take("/", "data.orangeTheme"),
+					textColor: LAY.take("/", "data.lightTheme"),
 					textFamily: LAY.take("/", "data.headingFont"),
 					textWeight: "bold",
 					textSize: 24
@@ -157,8 +160,8 @@ LAY.run({
 							this.level("/").data("page", this.attr("row.page"));
 						},
 						props: {
-							backgroundColor: LAY.take("/", "data.orangeTheme"),
-							textColor: LAY.take("/", "data.purpleTheme")
+							backgroundColor: LAY.take("/", "data.lightTheme"),
+							textColor: LAY.take("/", "data.darkTheme")
 						}
 					}
 				},
@@ -192,7 +195,7 @@ LAY.run({
 			props: {
 				text: LAY.take("/", "data.page"),
 				textSize: LAY.take("/", "data.bigFontSize"),
-				textColor: LAY.take("/", "data.orangeTheme"),
+				textColor: LAY.take("/", "data.lightTheme"),
 				textFamily: LAY.take("/", "data.headingFont"),
 				centerX: 0,
 				centerY: 0,
@@ -222,7 +225,7 @@ LAY.run({
 				props: {
 					height: 1,
 					width: LAY.take("../", "width"),
-					backgroundColor: LAY.take("/", "data.orangeTheme")
+					backgroundColor: LAY.take("/", "data.lightTheme")
 				},
 				transition: {
 					all: {

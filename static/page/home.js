@@ -15,19 +15,23 @@ var PAGE_HOME = {
   "Description": {
     props: {
       width: LAY.take("/", "width"),
-      backgroundColor: LAY.color('black'),
+      backgroundColor: LAY.take("/", "data.darkTheme"),
       textColor: LAY.take("/", "data.lightGrayTheme"),
       textSize: LAY.take("/", "data.bigFontSize"),
       textWrap: "normal",
-      text: "LayJS is a UI framework which uses (GPU accelerated) CSS3 transforms to position elements on the page. The central premise of which is to provide declaration of a full application using a single object, done so by providing the ability to create layout and data constraints across the object.",
+      text: '"A UI framework that lets you declare your application with a single object"',
+      textAlign: "center",
+      textLetterSpacing: 2,
       textPadding: {
-        top: LAY.take("/", "data.margin").divide(2),
+        top:LAY.take("/", "data.margin").divide(2),
         bottom: LAY.take("/", "data.margin").divide(2),
         left: LAY.take("/", "data.margin"),
         right: LAY.take("/", "data.margin")
-      }
+      },
+      scaleX: LAY.take(1).plus(
+        LAY.take("@../", "$scrolledY").divide(1000).min(1.5))
     },
-    transition: {all:{type:"ease", duration:1200}},
+    transition: {shiftY:{type:"ease", duration:1200}},
     states: {
       "unloaded": {
         onlyif: LAY.take("@", "data.loaded").not(),
@@ -50,7 +54,6 @@ var PAGE_HOME = {
         LAY.take("/", "data.margin")
       ),
       width: LAY.take('/', 'width')
-
     },
     "FeaturesInner": {
       props: {
@@ -124,12 +127,11 @@ var PAGE_HOME = {
               textLineHeight: 1
             },
             transition: {
-              "all": {
-                type: "spring",
-                //tension: 10,
-                //friction: 10,
-                //duration: 700
-                //duration: LAY.take("~", "$i").multiply(400)
+              "scaleX": {
+                type: "spring"
+              },
+              "scaleY": {
+                type: "spring"
               }
             },
             states: {
@@ -154,11 +156,12 @@ var PAGE_HOME = {
               top: LAY.take("../Icon", "bottom").plus(
                 LAY.take("/", "data.margin").divide(2)
               ),
-              textColor: LAY.take("/", "data.orangeTheme"),
+              textColor: LAY.take("/", "data.lightTheme"),
               text: LAY.take("~/", "row.title"),
               textAlign: "center",
-              textWeight: "bold",
-              textVariant: "small-caps"
+              //textWeight: "bold",
+              //textVariant: "small-caps"
+              //textTransform: "uppercase"
             },
             states: {
               "mobile": {
@@ -187,7 +190,7 @@ var PAGE_HOME = {
             }
           },
           transition: {
-            "all": {
+            "shiftY": {
               type: "ease",
               duration: LAY.take("~", "$i").multiply(360)
             }
@@ -214,7 +217,8 @@ var PAGE_HOME = {
     props: {
       top: LAY.take("../Features", "bottom"),
       width: LAY.take("/", "width"),
-      backgroundColor: LAY.take("/", "data.lightGrayTheme"),
+      //backgroundColor: LAY.take("/", "data.lightGrayTheme"),
+      borderTop: {style: "solid", width:1, color: LAY.take("/", "data.lightTheme")},
       filters: [
         {type:"blur", value:0}
       ],
@@ -229,7 +233,7 @@ var PAGE_HOME = {
       overflow: "auto"
     },
     transition: {
-      all: {
+      filters1Value: {
         type: "ease",
         duration: 600
       }

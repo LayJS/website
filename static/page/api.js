@@ -47,8 +47,13 @@ var PAGE_API = {
         },
         "Title": {
           exist: LAY.take("~/", "data.isLink").not(),
+          // data: {
+          //   psuedolink: LAY.take("~/../", "data.filePath").concat("/").concat(
+          //     LAY.take("~/", "row.sysname")
+          //   )
+          // },
           props: {
-            text: LAY.take("~/", "row.title"),
+            text: LAY.take("> ").concat(LAY.take("~/", "row.title")),
             textPadding: 10,
             width: LAY.take("~/", "width"),
             borderBottom: {style:"solid", width:1,
@@ -59,6 +64,18 @@ var PAGE_API = {
               this.level("~/").data("isOpen",
                 !this.level("~/").attr("data.isOpen") )
             }
+          },
+          states: {
+            "open": {
+              //onlyif: LAY.take("/", "$pathname").startsWith(LAY.take("", "data.psuedolink")),
+              onlyif: LAY.take("~/", "data.isOpen"),
+              props: {
+                //backgroundColor: LAY.take("/", "data.darkTheme"),
+                //textColor: LAY.take("/", "data.lightTheme"),
+                //textDecoration: "underline",
+                text: LAY.take("好 ").concat(LAY.take("~/","row.title")),
+              }
+            }
           }
         },
         "Link": {
@@ -66,7 +83,7 @@ var PAGE_API = {
           props: {
             width: LAY.take("../", "width"),
             text: LAY.take("~/", "row.title"),
-            textColor: LAY.take("/", "data.purpleTheme"),
+            textColor: LAY.take("/", "data.darkTheme"),
             textPadding: 3,
             link: LAY.take("~/../", "data.filePath").concat("/").concat(
               LAY.take("~/", "row.sysname")
@@ -76,15 +93,17 @@ var PAGE_API = {
             "hovering": {
               onlyif: LAY.take("", "$hovering"),
               props: {
-                backgroundColor: LAY.take("/", "data.orangeTheme")
+                //backgroundColor: LAY.take("/", "data.lightTheme")
+                backgroundColor: LAY.take("/", "data.lightGrayTheme")
               }
             },
             "current": {
               onlyif: LAY.take("/", "$pathname").eq(LAY.take("", "link")),
               props: {
-                backgroundColor: LAY.take("/", "data.orangeTheme"),
-                textColor: LAY.take("/", "data.purpleTheme"),
-                text: LAY.take("> ").concat(LAY.take("","root.text")),
+                //backgroundColor: LAY.take("/", "data.darkTheme"),
+                textColor: LAY.take("/", "data.lightTheme"),
+                //textDecoration: "underline",
+                //text: LAY.take("> ").concat(LAY.take("","root.text")),
               },
               install: function () {
                 this.level("@").data("content",

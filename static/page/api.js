@@ -12,10 +12,9 @@ var PAGE_API = {
     props: {
       width: 300,
       height: LAY.take("../", "height"),
-      backgroundColor: LAY.take("/", "data.lightGrayTheme"),
       overflowY: "auto",
-      borderRight: {style:"solid", width:1,
-        color:LAY.take("/", "data.lightGrayTheme")}
+      backgroundColor: LAY.take("/", "data.darkTheme"),
+      textColor: LAY.take("/", "data.lightTheme")
     },
     states: {
       "mobile": {
@@ -24,7 +23,7 @@ var PAGE_API = {
           height: LAY.take("", "$naturalHeight"),
           width: LAY.take("../", "width"),
           borderBottom: {style:"solid", width:1,
-            color:LAY.take("/", "data.lightGrayTheme")},
+            color:LAY.take("/", "data.lightTheme")},
           borderRightWidth: 0,
           overflowY: "visible"
         }
@@ -38,8 +37,12 @@ var PAGE_API = {
         props: {
           cursor: "pointer",
           userSelect: "none",
-          width: LAY.take("../", "width"),
-          backgroundColor: LAY.color("white")
+          width: LAY.take("../", "width")
+        },
+        transition: {
+          top: {
+            type: "spring"
+          },
         },
         data: {
           isOpen: LAY.take("@", "data.emptyPage"),
@@ -47,17 +50,10 @@ var PAGE_API = {
         },
         "Title": {
           exist: LAY.take("~/", "data.isLink").not(),
-          // data: {
-          //   psuedolink: LAY.take("~/../", "data.filePath").concat("/").concat(
-          //     LAY.take("~/", "row.sysname")
-          //   )
-          // },
           props: {
             text: LAY.take("> ").concat(LAY.take("~/", "row.title")),
             textPadding: 10,
             width: LAY.take("~/", "width"),
-            borderBottom: {style:"solid", width:1,
-              color:LAY.take("/", "data.lightGrayTheme")}
           },
           when: {
             click: function () {
@@ -67,13 +63,9 @@ var PAGE_API = {
           },
           states: {
             "open": {
-              //onlyif: LAY.take("/", "$pathname").startsWith(LAY.take("", "data.psuedolink")),
               onlyif: LAY.take("~/", "data.isOpen"),
               props: {
-                //backgroundColor: LAY.take("/", "data.darkTheme"),
-                //textColor: LAY.take("/", "data.lightTheme"),
-                //textDecoration: "underline",
-                text: LAY.take("好 ").concat(LAY.take("~/","row.title")),
+                //text: LAY.take("[ ").concat(LAY.take("~/","row.title")).concat(" ]"),
               }
             }
           }
@@ -83,7 +75,6 @@ var PAGE_API = {
           props: {
             width: LAY.take("../", "width"),
             text: LAY.take("~/", "row.title"),
-            textColor: LAY.take("/", "data.darkTheme"),
             textPadding: 3,
             link: LAY.take("~/../", "data.filePath").concat("/").concat(
               LAY.take("~/", "row.sysname")
@@ -93,17 +84,15 @@ var PAGE_API = {
             "hovering": {
               onlyif: LAY.take("", "$hovering"),
               props: {
-                //backgroundColor: LAY.take("/", "data.lightTheme")
-                backgroundColor: LAY.take("/", "data.lightGrayTheme")
+                backgroundColor: LAY.take("/", "data.lightTheme"),
+                textColor: LAY.take("/", "data.darkTheme")
               }
             },
             "current": {
               onlyif: LAY.take("/", "$pathname").eq(LAY.take("", "link")),
               props: {
-                //backgroundColor: LAY.take("/", "data.darkTheme"),
-                textColor: LAY.take("/", "data.lightTheme"),
-                //textDecoration: "underline",
-                //text: LAY.take("> ").concat(LAY.take("","root.text")),
+                backgroundColor: LAY.take("/", "data.lightTheme"),
+                textColor: LAY.take("/", "data.darkTheme")
               },
               install: function () {
                 this.level("@").data("content",
@@ -125,13 +114,36 @@ var PAGE_API = {
           data: {
             rows: LAY.take("~/", "row.sub"),
             filePath: LAY.take("~/../", "data.filePath").concat("/").concat(
-              LAY.take("~/", "row.sysname"))
+              LAY.take("~/", "row.sysname")),
+            isToHide: LAY.take("~/", "data.isOpen").not()
           },
           props: {
-            display: LAY.take("~/", "data.isOpen"),
             top: LAY.take("../Title", "bottom"),
             width: LAY.take("../", "width"),
-            textIndent: LAY.take("../", "left").plus(16)
+            textIndent: LAY.take("../", "left").plus(32),
+            overflowY: "hidden",
+            originY: 0
+          },
+          transition: {
+            opacity: {
+              type: "spring"
+            },
+            scaleY: {
+              type: "spring"
+            },
+            height: {
+              type: "spring"
+            }
+          },
+          states: {
+            'closed': {
+              onlyif: LAY.take("~/", "data.isOpen").not(),
+              props: {
+                opacity: 0,
+                scaleY: 0,
+                height: 0,
+              }
+            }
           }
         }
       }

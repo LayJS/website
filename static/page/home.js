@@ -16,7 +16,7 @@ var PAGE_HOME = {
     props: {
       width: LAY.take("/", "width"),
       backgroundColor: LAY.take("/", "data.darkTheme"),
-      textColor: LAY.take("/", "data.lightGrayTheme"),
+      textColor: LAY.take("/", "data.lightTheme"),
       textSize: LAY.take("/", "data.bigFontSize"),
       textWrap: "normal",
       text: '"A UI framework that lets you declare your application with a single object"',
@@ -66,35 +66,32 @@ var PAGE_HOME = {
             return isMobile ? "vertical": "horizontal";
           }).fn(LAY.take("/", "data.isMobile")),
           fargs: {
-            vertical: {gap: LAY.take("/", "data.margin").multiply(2)}
+            vertical: {gap: LAY.take("/", "data.margin").double()}
           },
           rows: [
             {
               title:'Hardware Accelerated',
               icon: "1b3",
-              subtext: "LAY uses the CSS transform primitive to position each element. " +
-              "Furthermore, LAY offers non-hardware accelerated CSS 'left'/'top' as an alternative. " +
-              "For legacy browsers without support for hardware acceleration, " +
-              "LAY will gracefully degrade to using 'left'/'top' positioning."
+              subtext: "The CSS3 transform primitives position each element. " +
+              "(Legacy Browsers automatically fallback to top/left positioning)"
             },
             {
               title:'Constraint Based',
-              icon: "247",
-              subtext: "LAY provides a system of creating constraints within elements " +
-              "of the application. This ensures a more maintainable and scalable interface " +
-              "as writing the application automatically follows a DRY (Do not Repeat Yourself) principle."
+              icon: "248",
+              subtext: "Turing-complete constraints allow you to create " +
+              "interfaces declaratively and also display your data in true MVC form."
             },
             {
-              title: "Single Object Declaration",
+              title: 'Truly Flexible',
               icon: "0a6",
-              subtext: "LAY applications are specified by following a declarative paradigm " +
-              "as opposed to an imperative paradigm. Furthermore, the entire declaration of " +
-              "the application is specified within a single nested object."
+              subtext: "Use the 'spring' animation, or " +
+              "position elements in a 'circular' formation, " +
+              "or write your own custom animations and formations."
             }
           ]
         },
         props: {
-          width: LAY.take("../", "width").divide(3),
+          width: LAY.take("../", "width").divide(LAY.take("many", "rows").length()),
           textAlign: "center",
         },
         states: {
@@ -123,23 +120,28 @@ var PAGE_HOME = {
               textFamily: "FontAwesome",
               html: LAY.take("&#xf%s;").format(
                 LAY.take("~/", "row.icon")),
-              textSize: LAY.take("/", "data.margin").multiply(2),
-              textLineHeight: 1
+              textSize: LAY.take("/", "data.margin").double(),
+              textLineHeight: 1,
+              textColor: LAY.take("/", "data.darkTheme")
             },
             transition: {
               "scaleX": {
-                type: "spring"
+                type: "spring",
+                tension: 10000,
+                friction: 50
               },
               "scaleY": {
-                type: "spring"
+                type: "spring",
+                tension: 10000,
+                friction: 50
               }
             },
             states: {
               "unloaded": {
                 onlyif: LAY.take("@", "data.loaded").not(),
                 props: {
-                  scaleX: 0.5,
-                  scaleY: 0.5
+                  scaleX: .7,
+                  scaleY: .7
                 },
               },
               "mobile": {
@@ -156,12 +158,10 @@ var PAGE_HOME = {
               top: LAY.take("../Icon", "bottom").plus(
                 LAY.take("/", "data.margin").divide(2)
               ),
-              textColor: LAY.take("/", "data.lightTheme"),
               text: LAY.take("~/", "row.title"),
               textAlign: "center",
-              //textWeight: "bold",
-              //textVariant: "small-caps"
-              //textTransform: "uppercase"
+              //textWeight:"lighter",
+              textSize: 24
             },
             states: {
               "mobile": {
@@ -182,24 +182,26 @@ var PAGE_HOME = {
             ),
             width: LAY.take("../", "width"),
             text: LAY.take("../", "row.subtext"),
-            //textColor: LAY.take("/", "data.grayTheme"),
             textWrap: "normal",
             textPadding: {
               left:LAY.take("/", "data.margin"),
               right: LAY.take("/", "data.margin")
-            }
+            },
+            textWeight:"lighter"
           },
           transition: {
-            "shiftY": {
+            "opacity": {
               type: "ease",
-              duration: LAY.take("~", "$i").multiply(360)
+              //duration: 1000
+              duration: LAY.take("~", "$i").multiply(1080)
             }
           },
           states: {
             "unloaded": {
               onlyif: LAY.take("@", "data.loaded").not(),
               props: {
-                shiftY: 20
+                opacity: 0.1
+                //shiftY: 20
               },
             },
             "mobile": {
@@ -209,51 +211,6 @@ var PAGE_HOME = {
               }
             }
           }
-        }
-      }
-    }
-  },
-  "GettingStarted": {
-    props: {
-      top: LAY.take("../Features", "bottom"),
-      width: LAY.take("/", "width"),
-      //backgroundColor: LAY.take("/", "data.lightGrayTheme"),
-      borderTop: {style: "solid", width:1, color: LAY.take("/", "data.lightTheme")},
-      filters: [
-        {type:"blur", value:0}
-      ],
-      html: LAY.markdown(README),
-      textPadding:{
-        top:LAY.take("/", "data.margin").half(),
-        bottom:LAY.take("/", "data.margin").half(),
-        left:LAY.take("/", "data.margin"),
-        right:LAY.take("/", "data.margin")
-      },
-      textWrap: "normal",
-      overflow: "auto"
-    },
-    transition: {
-      filters1Value: {
-        type: "ease",
-        duration: 600
-      }
-    },
-    data: {
-      loaded: false
-    },
-    states: {
-      "unloaded": {
-        onlyif: ((LAY.take("@../", "$scrolledY").plus(320)).lt(
-          LAY.take("", "top")).and(
-            LAY.take("", "data.loaded").not())
-        ),
-        props: {
-          filters: [
-            {type:"blur", value:6}
-          ]
-        },
-        uninstall: function () {
-          this.data("loaded", true);
         }
       }
     }

@@ -1,12 +1,26 @@
 
 
-
+LAY.formation("splitHorizontal", {width: 0,centerGap: 0, gap:0}, function (f , filteredLevel, filteredLevelS, fargs) {
+	var isFirstHalf = f <= filteredLevelS.length/2;
+	if (isFirstHalf) {
+		return [LAY.take(filteredLevelS[f - 2].path(), "right").add(
+					fargs.gap), undefined];
+	} else {
+		if (f === filteredLevelS.length) {
+			return [LAY.take(fargs.width).minus(LAY.take("", "width")), undefined]
+		} else {
+			return [
+				LAY.take(filteredLevelS[f].path(), "left").minus(
+					LAY.take("", "width").plus(fargs.gap)), undefined];
+		}
+	}
+});
 LAY.run({
 	data: {
-		darkTheme: LAY.rgb(30,30,30),
-		lightTheme: LAY.rgb(175,205,180),
+		darkTheme: LAY.rgb(40,40,40),
+		lightTheme: LAY.rgb(220,220,220),
 		grayTheme: LAY.rgb(120,120,120),
-		lightGrayTheme: LAY.rgb(238,238,238),
+		colorTheme: LAY.color("yellow"),
 		mobileWidth: 720,
 		isMobileMenuInvoked: false,
 		bigFontSize: LAY.take(function (isMobile) {
@@ -23,17 +37,19 @@ LAY.run({
     textWeight:"300",
 		textLineHeight: 1.2,
 		textSize: 17,
-		cursor: "default"
+		cursor: "default",
+		textColor: LAY.take("/", "data.darkTheme")
   },
 	$extfonts: ["FontAwesome"],
 	css:
 		LAY.take("pre {box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word;width:100%; background:#{darkTheme};color:white;padding:10px}" +
-		" a { color: #{lightTheme}; } a:visited { color: #{darkenedLightTheme}; }" +
+		" a { text-decoration:underline; color:inherit; } a:visited { opacity:0.8; }" +
 		" h1,h2,h3,h4,h5,h6 { font-family: #{headingFont} }").format(
 			{
 				lightTheme: LAY.take("", "data.lightTheme"),
 				darkTheme: LAY.take("", "data.darkTheme"),
-				darkenedLightTheme: LAY.take("", "data.lightTheme").colorDarken(0.2),
+				colorTheme: LAY.take("", "data.colorTheme"),
+				darkenedColorTheme: LAY.take("", "data.colorTheme").colorDarken(0.2),
 				headingFont: LAY.take("", "data.headingFont")
 			}
 		),
@@ -49,16 +65,13 @@ LAY.run({
   	props: {
 			height: LAY.take("/", "data.margin").multiply(2.4),
   		width: LAY.take('/', 'width'),
-			//backgroundColor: LAY.take("/", "data.darkTheme"),
 			backgroundImage: LAY.take("repeating-linear-gradient(310deg, %s, %s 64px, \
 		    		%s 64px, %s 128px)").format(
 						LAY.take("/", "data.darkTheme"),
 						LAY.take("/", "data.darkTheme"),
-						LAY.take("/", "data.darkTheme").colorDarken(0.04),
-						LAY.take("/", "data.darkTheme").colorDarken(0.04)
+						LAY.take("/", "data.darkTheme").colorDarken(0.1),
+						LAY.take("/", "data.darkTheme").colorDarken(0.1)
 					),
-		borderBottom: {style: "solid", width:1, color: LAY.take("/", "data.lightTheme")},
-
 			zIndex: 3,
   	},
 		states: {
@@ -74,17 +87,26 @@ LAY.run({
 				link: "/",
 				cursor: "pointer",
 				centerY: 0,
+				centerX: 0,
 				left: LAY.take("/", "data.margin").multiply(1),
 				height: LAY.take("../", "height").percent(72),
-				image: "/static/logo.png"
+				image: "/static/logo.png",
+				zIndex: 5
+			},
+			states: {
+				"mobile": {
+					onlyif: LAY.take("/", "data.isMobile"),
+					props: {
+						left: LAY.take("/", "data.margin")
+					}
+				}
 			}
 		},
 		"NavArea": {
 			props: {
-				left: LAY.take("../Logo", "right").plus(
-					LAY.take("/","data.margin").multiply(1)),
+				left: LAY.take("/","data.margin"),
 				centerY: 0,
-				width: LAY.take("../", "width").minus(LAY.take("", "left"))
+				width: LAY.take("../", "width").minus(LAY.take("", "left").double()),
 			},
 			states: {
 				"mobile": {
@@ -104,12 +126,19 @@ LAY.run({
 							icon: "&#xf15c;"},
 						{page: "EXAMPLES", link: "/examples",
 							icon: "&#xf108;"},
+						{page: "INSTALL", link: "/install",
+							icon: "&#xf019;"
+						},
 						{page: "SOURCE", link: "https://github.com/LayJS/LayJS",
 							icon: "&#xf09b"},
 					],
-					formation: "horizontal",
+					formation: "splitHorizontal",
 					fargs: {
-						horizontal: {gap:LAY.take("/", "data.margin")}
+						//horizontal: {gap:LAY.take("../", "width").divide(10)}
+						splitHorizontal: {
+							width: LAY.take("../", "width"),
+							gap: LAY.take("/", "data.margin")
+						}
 					},
 					states: {
 						"mobile": {
@@ -121,28 +150,22 @@ LAY.run({
 				props: {
 					cursor: "pointer",
 					backgroundColor: LAY.color("white").setAlpha(0.08),
-					width: LAY.take("../", "width").divide(3).minus(
-						LAY.take("/", "data.margin")
-					),
+					width: LAY.take("/", "width").divide(5.5),
 					height: LAY.take("", "$naturalHeight").plus(
 						LAY.take("/", "data.margin").half().half()),
 					link: LAY.take("", "row.link"),
 					textColor: LAY.take("/", "data.lightTheme"),
 					textFamily: LAY.take("/", "data.headingFont"),
 					textWeight: "bold",
-					textSize: 24
-				},
-				transition: {
-					backgroundColor: {
-						type: "ease",
-						duration: 400
-					}
+					textSize: LAY.take("", "width").divide(10)
 				},
 				states: {
 					"mobile": {
 						onlyif: LAY.take("/","data.isMobile"),
 						props: {
-							width: LAY.take("../", "width")
+							width: LAY.take("../", "width"),
+							textSize: LAY.take("/", "textSize"),
+							backgroundColor: LAY.transparent()
 						}
 					},
 					"hover": {
@@ -150,7 +173,13 @@ LAY.run({
 						props: {
 							backgroundColor: LAY.take(
 								"", "root.backgroundColor").colorTransparentize(2)
-						}
+						},
+						transition: {
+							backgroundColor: {
+								type: "ease",
+								duration: 200
+							}
+						},
 					},
 					"selected": {
 						onlyif: LAY.take("/", "$pathname").concat("/").startsWith(
@@ -167,29 +196,42 @@ LAY.run({
 				},
 				"Icon": {
 					props: {
-						left: LAY.take("/", "data.margin"),
 						centerY: 0,
+						left: LAY.take("/", "data.margin").half(),
 						textFamily: "FontAwesome",
 						html: LAY.take("~/", "row.icon")
+					},
+					states: {
+						'rightHalf': {
+							onlyif: LAY.take("~/", "$i").gt(LAY.take("~/many", "rows").length().half()).or(
+								LAY.take("/", "data.isMobile")),
+							props: {
+								right: LAY.take("/", "data.margin").half(),
+								//left: LAY.take("../Text", "right").plus(LAY.take("/", "data.margin"))
+							}
+						}
 					}
 				},
 				"Text": {
 					props: {
-						left: LAY.take("../Icon","right").plus(
-							LAY.take("/", "data.margin")),
 						centerY: 0,
+						left: LAY.take("../Icon","right").plus(
+							LAY.take("/", "data.margin").half()),
 						text: LAY.take("~/", "row.page")
 					},
 					states: {
-						"mobile": {
-							onlyif: LAY.take("/","data.isMobile"),
+						"rightHalf": {
+							onlyif: LAY.take("../Icon", "rightHalf.onlyif"),
 							props: {
-								right: LAY.take("/", "data.margin")
+								right: LAY.take("../", "width").minus(LAY.take("../Icon", "left")).plus(
+									LAY.take("/", "data.margin").half()
+								)
 							}
 						}
 					}
 				}
 			}
+
 		},
 		"MobileTitle": {
 			props: {
@@ -270,7 +312,8 @@ LAY.run({
   		height: LAY.take('/', 'height').minus(
 				LAY.take('../Header', 'bottom')
 			),
-			overflowY: "auto"
+			overflowY: "auto",
+			backgroundColor: LAY.take("/", "data.lightTheme")
   	},
 		"Home": {
 			$inherit: PAGE_HOME,
@@ -283,6 +326,10 @@ LAY.run({
 		"Examples": {
 			$inherit: PAGE_EXAMPLES,
 			exist: LAY.take("/", "data.page").eq("EXAMPLES")
+		},
+		"Install": {
+			$inherit: PAGE_INSTALL,
+			exist: LAY.take("/", "data.page").eq("INSTALL")
 		}
 	}
 

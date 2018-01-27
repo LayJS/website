@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheRelforFoundation/layjs-website.git"
+    "url": "git+https://github.com/endfront/website.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheRelforFoundation/layjs-website/issues"
+    "url": "https://github.com/endfront/website/issues"
   },
-  "homepage": "https://github.com/TheRelforFoundation/layjs-website#readme",
+  "homepage": "https://github.com/endfront/website#readme",
   "dependencies": {
     "markdown": "^0.5.0"
   }

@@ -159,6 +159,12 @@ LAY.run({
 					textWeight: "bold",
 					textSize: LAY.take("", "width").divide(10)
 				},
+				transition: {
+					backgroundColor: {
+						type: "ease",
+						duration: 200
+					}
+				},
 				states: {
 					"mobile": {
 						onlyif: LAY.take("/","data.isMobile"),
@@ -169,17 +175,18 @@ LAY.run({
 						}
 					},
 					"hover": {
-						onlyif: LAY.take("", "$hovering"),
+						onlyif: LAY.take("", "$hovering").and(LAY.take("", "$clicking").not()),
 						props: {
 							backgroundColor: LAY.take(
 								"", "root.backgroundColor").colorTransparentize(2)
-						},
-						transition: {
-							backgroundColor: {
-								type: "ease",
-								duration: 200
-							}
-						},
+						}
+					},
+					"clicking": {
+						onlyif: LAY.take("", "$clicking"),
+						props: {
+							backgroundColor: LAY.take(
+								"", "root.backgroundColor").colorTransparentize(6)
+						}
 					},
 					"selected": {
 						onlyif: LAY.take("/", "$pathname").concat("/").startsWith(

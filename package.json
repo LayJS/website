@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/endfront/website#readme",
   "dependencies": {
+    "lay-js": "^0.16.9",
     "markdown": "^0.5.0"
   }
 }

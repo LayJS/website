@@ -56,3 +56,5 @@ fs.writeFileSync("static/API.js",
 
 
 execSync("rm -rf LayJS");
+
+execSync('cp node_modules/lay-js/LAY.js static/LAY.js');

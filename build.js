@@ -8,7 +8,7 @@ var
 
 
 if ((execSync("ls").toString()).indexOf("LayJS") === -1 )  {
-  execSync("git clone https://github.com/LayJS/LayJS.git;");
+  execSync("git clone https://github.com/endfront/LayJS.git;");
 }
 
 
